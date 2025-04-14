@@ -12,8 +12,13 @@ import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
 
-// Protected route component
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+/**
+ * Protected route component
+ * @param {Object} props - Component properties
+ * @param {React.ReactNode} props.children - Child components
+ * @returns {React.ReactNode} Child components or redirect
+ */
+const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
   
   if (!isAuthenticated) {
@@ -23,8 +28,13 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-// Public route component (accessible only when not authenticated)
-const PublicRoute = ({ children }: { children: React.ReactNode }) => {
+/**
+ * Public route component (accessible only when not authenticated)
+ * @param {Object} props - Component properties
+ * @param {React.ReactNode} props.children - Child components 
+ * @returns {React.ReactNode} Child components or redirect
+ */
+const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
   
   if (isAuthenticated) {
@@ -34,7 +44,10 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-// App container with providers
+/**
+ * App content component with routes
+ * @returns {React.FC} React Function Component
+ */
 const AppContent = () => {
   return (
     <BrowserRouter>
@@ -61,6 +74,10 @@ const AppContent = () => {
   );
 };
 
+/**
+ * Main App component
+ * @returns {React.FC} React Function Component
+ */
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>

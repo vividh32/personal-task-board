@@ -1,17 +1,8 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { Task } from "@/types";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 
-interface TaskContextType {
-  tasks: Task[];
-  addTask: (task: Omit<Task, "id" | "userId" | "createdAt" | "completed">) => void;
-  editTask: (id: string, updates: Partial<Omit<Task, "id" | "userId" | "createdAt">>) => void;
-  deleteTask: (id: string) => void;
-  toggleTaskCompletion: (id: string) => void;
-}
-
-const TaskContext = createContext<TaskContextType | undefined>(undefined);
+const TaskContext = createContext(undefined);
 
 export const useTask = () => {
   const context = useContext(TaskContext);
@@ -21,12 +12,14 @@ export const useTask = () => {
   return context;
 };
 
-interface TaskProviderProps {
-  children: ReactNode;
-}
-
-export const TaskProvider = ({ children }: TaskProviderProps) => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+/**
+ * TaskProvider component for managing tasks state
+ * @param {Object} props - Component properties
+ * @param {React.ReactNode} props.children - Child components
+ * @returns {React.FC} React Function Component
+ */
+export const TaskProvider = ({ children }) => {
+  const [tasks, setTasks] = useState([]);
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
 
@@ -36,7 +29,7 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
       const savedTasks = localStorage.getItem("tasks");
       if (savedTasks) {
         try {
-          const parsedTasks: Task[] = JSON.parse(savedTasks);
+          const parsedTasks = JSON.parse(savedTasks);
           // Filter tasks for the current user
           const userTasks = parsedTasks.filter(task => task.userId === user.id);
           setTasks(userTasks);
@@ -56,11 +49,11 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
     if (isAuthenticated && user) {
       // Get all existing tasks for other users
       const savedTasks = localStorage.getItem("tasks");
-      let allTasks: Task[] = [];
+      let allTasks = [];
       
       if (savedTasks) {
         try {
-          const parsedTasks: Task[] = JSON.parse(savedTasks);
+          const parsedTasks = JSON.parse(savedTasks);
           // Keep tasks that don't belong to the current user
           allTasks = parsedTasks.filter(task => task.userId !== user.id);
         } catch (error) {
@@ -74,7 +67,7 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
     }
   }, [tasks, isAuthenticated, user]);
 
-  const addTask = (taskData: Omit<Task, "id" | "userId" | "createdAt" | "completed">) => {
+  const addTask = (taskData) => {
     if (!isAuthenticated || !user) {
       toast({
         title: "Authentication required",
@@ -84,7 +77,7 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
       return;
     }
 
-    const newTask: Task = {
+    const newTask = {
       id: Date.now().toString(),
       ...taskData,
       completed: false,
@@ -100,7 +93,7 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
     });
   };
 
-  const editTask = (id: string, updates: Partial<Omit<Task, "id" | "userId" | "createdAt">>) => {
+  const editTask = (id, updates) => {
     if (!isAuthenticated) {
       return;
     }
@@ -117,7 +110,7 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
     });
   };
 
-  const deleteTask = (id: string) => {
+  const deleteTask = (id) => {
     if (!isAuthenticated) {
       return;
     }
@@ -130,7 +123,7 @@ export const TaskProvider = ({ children }: TaskProviderProps) => {
     });
   };
 
-  const toggleTaskCompletion = (id: string) => {
+  const toggleTaskCompletion = (id) => {
     if (!isAuthenticated) {
       return;
     }

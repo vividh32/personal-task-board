@@ -1,6 +1,5 @@
 
 import React, { useState } from "react";
-import { Task } from "@/types";
 import { useTask } from "@/context/TaskContext";
 import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -19,11 +18,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import TaskEditForm from "./TaskEditForm";
 
-interface TaskItemProps {
-  task: Task;
-}
-
-const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
+/**
+ * TaskItem component for displaying a single task
+ * @param {Object} props - Component properties
+ * @param {Object} props.task - Task object to display
+ * @returns {React.FC} React Function Component
+ */
+const TaskItem = ({ task }) => {
   const { toggleTaskCompletion, deleteTask } = useTask();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);

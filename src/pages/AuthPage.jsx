@@ -4,7 +4,11 @@ import LoginForm from "@/components/auth/LoginForm";
 import RegisterForm from "@/components/auth/RegisterForm";
 import { CheckCircle } from "lucide-react";
 
-const AuthPage: React.FC = () => {
+/**
+ * Authentication page component
+ * @returns {React.FC} React Function Component
+ */
+const AuthPage = () => {
   const [showLogin, setShowLogin] = useState(true);
 
   const toggleForm = () => {

@@ -4,7 +4,11 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, LogOut } from "lucide-react";
 
-const AppHeader: React.FC = () => {
+/**
+ * AppHeader component for the application header
+ * @returns {React.FC} React Function Component
+ */
+const AppHeader = () => {
   const { user, logout } = useAuth();
 
   return (

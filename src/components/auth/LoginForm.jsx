@@ -22,13 +22,17 @@ const loginSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
-
-const LoginForm = ({ onToggleForm }: { onToggleForm: () => void }) => {
+/**
+ * LoginForm component for user authentication
+ * @param {Object} props - Component properties
+ * @param {Function} props.onToggleForm - Function to toggle between login and register forms
+ * @returns {React.FC} React Function Component
+ */
+const LoginForm = ({ onToggleForm }) => {
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  const form = useForm<LoginFormValues>({
+  const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
@@ -36,7 +40,7 @@ const LoginForm = ({ onToggleForm }: { onToggleForm: () => void }) => {
     },
   });
 
-  const onSubmit = async (data: LoginFormValues) => {
+  const onSubmit = async (data) => {
     setLoading(true);
     try {
       await login(data.email, data.password);

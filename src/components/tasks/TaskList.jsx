@@ -7,12 +7,16 @@ import { Input } from "@/components/ui/input";
 import { Search, Plus, CheckCircle2, Circle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
-const TaskList: React.FC = () => {
+/**
+ * TaskList component for displaying the list of tasks
+ * @returns {React.FC} React Function Component
+ */
+const TaskList = () => {
   const { tasks } = useTask();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterCompleted, setFilterCompleted] = useState<boolean | null>(null);
+  const [filterCompleted, setFilterCompleted] = useState(null);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
@@ -27,7 +31,7 @@ const TaskList: React.FC = () => {
     return matchesSearch && task.completed === filterCompleted;
   });
 
-  const toggleFilter = (completed: boolean | null) => {
+  const toggleFilter = (completed) => {
     setFilterCompleted(current => current === completed ? null : completed);
   };
 

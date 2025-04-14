@@ -4,7 +4,11 @@ import AppHeader from "@/components/layout/AppHeader";
 import TaskForm from "@/components/tasks/TaskForm";
 import TaskList from "@/components/tasks/TaskList";
 
-const Dashboard: React.FC = () => {
+/**
+ * Dashboard page component
+ * @returns {React.FC} React Function Component
+ */
+const Dashboard = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-800">
       <AppHeader />

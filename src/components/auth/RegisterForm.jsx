@@ -27,13 +27,17 @@ const registerSchema = z.object({
   path: ["confirmPassword"],
 });
 
-type RegisterFormValues = z.infer<typeof registerSchema>;
-
-const RegisterForm = ({ onToggleForm }: { onToggleForm: () => void }) => {
+/**
+ * RegisterForm component for user registration
+ * @param {Object} props - Component properties
+ * @param {Function} props.onToggleForm - Function to toggle between login and register forms
+ * @returns {React.FC} React Function Component
+ */
+const RegisterForm = ({ onToggleForm }) => {
   const { register } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  const form = useForm<RegisterFormValues>({
+  const form = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       name: "",
@@ -43,7 +47,7 @@ const RegisterForm = ({ onToggleForm }: { onToggleForm: () => void }) => {
     },
   });
 
-  const onSubmit = async (data: RegisterFormValues) => {
+  const onSubmit = async (data) => {
     setLoading(true);
     try {
       await register(data.email, data.password, data.name);

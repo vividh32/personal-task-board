@@ -1,15 +1,8 @@
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { User, AuthState } from "@/types";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
-interface AuthContextType extends AuthState {
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name?: string) => Promise<void>;
-  logout: () => void;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext(undefined);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -19,12 +12,14 @@ export const useAuth = () => {
   return context;
 };
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [authState, setAuthState] = useState<AuthState>({
+/**
+ * AuthProvider component for managing authentication state
+ * @param {Object} props - Component properties
+ * @param {React.ReactNode} props.children - Child components
+ * @returns {React.FC} React Function Component
+ */
+export const AuthProvider = ({ children }) => {
+  const [authState, setAuthState] = useState({
     user: null,
     isAuthenticated: false,
   });
@@ -47,12 +42,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email, password) => {
     try {
       // In a real app, this would be an API call
       // Simulate successful login for demo
       if (email && password) {
-        const mockUser: User = {
+        const mockUser = {
           id: "user1",
           email,
           name: email.split("@")[0],
@@ -83,12 +78,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const register = async (email: string, password: string, name?: string) => {
+  const register = async (email, password, name) => {
     try {
       // In a real app, this would be an API call
       // Simulate successful registration for demo
       if (email && password) {
-        const mockUser: User = {
+        const mockUser = {
           id: "user" + Date.now(),
           email,
           name: name || email.split("@")[0],

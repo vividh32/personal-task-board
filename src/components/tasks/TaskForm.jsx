@@ -15,50 +15,55 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useTask } from "@/context/TaskContext";
-import { Task } from "@/types";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Plus } from "lucide-react";
 
+// Define schema with JavaScript style comments instead of TypeScript types
 const taskSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title is too long"),
   description: z.string().max(500, "Description is too long").optional(),
 });
 
-type TaskFormValues = z.infer<typeof taskSchema>;
+/**
+ * TaskForm component for adding new tasks
+ * @returns {React.FC} React Function Component
+ */
+const TaskForm = () => {
+  const { addTask } = useTask();
 
-interface TaskEditFormProps {
-  task: Task;
-  onCancel: () => void;
-  onComplete: () => void;
-}
-
-const TaskEditForm: React.FC<TaskEditFormProps> = ({ task, onCancel, onComplete }) => {
-  const { editTask } = useTask();
-
-  const form = useForm<TaskFormValues>({
+  // Use form with JS style
+  const form = useForm({
     resolver: zodResolver(taskSchema),
     defaultValues: {
-      title: task.title,
-      description: task.description || "",
+      title: "",
+      description: "",
     },
   });
 
-  const onSubmit = (data: TaskFormValues) => {
-    editTask(task.id, data);
-    onComplete();
+  /**
+   * Handle form submission
+   * @param {Object} data - The form data
+   * @param {string} data.title - Task title
+   * @param {string} [data.description] - Optional task description
+   */
+  const onSubmit = (data) => {
+    // Add task with the form data
+    addTask({
+      title: data.title,
+      description: data.description,
+    });
+    form.reset();
   };
 
   return (
-    <Dialog open={true} onOpenChange={() => onCancel()}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Edit Task</DialogTitle>
-        </DialogHeader>
+    <Card className="mb-6">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-xl flex items-center">
+          <Plus className="h-5 w-5 mr-2 text-task-primary" />
+          Add New Task
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -68,7 +73,7 @@ const TaskEditForm: React.FC<TaskEditFormProps> = ({ task, onCancel, onComplete 
                 <FormItem>
                   <FormLabel>Task Title</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input placeholder="What needs to be done?" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -81,29 +86,24 @@ const TaskEditForm: React.FC<TaskEditFormProps> = ({ task, onCancel, onComplete 
                 <FormItem>
                   <FormLabel>Description (Optional)</FormLabel>
                   <FormControl>
-                    <Textarea
-                      className="resize-none"
-                      {...field}
-                      value={field.value || ""}
+                    <Textarea 
+                      placeholder="Add some details about the task..." 
+                      className="resize-none" 
+                      {...field} 
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={onCancel}>
-                Cancel
-              </Button>
-              <Button type="submit" className="bg-task-primary hover:bg-task-secondary">
-                Save Changes
-              </Button>
-            </DialogFooter>
+            <Button type="submit" className="w-full bg-task-primary hover:bg-task-secondary">
+              Add Task
+            </Button>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </CardContent>
+    </Card>
   );
 };
 
-export default TaskEditForm;
+export default TaskForm;
