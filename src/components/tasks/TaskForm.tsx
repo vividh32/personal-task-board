@@ -18,17 +18,22 @@ import { useTask } from "@/context/TaskContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 
+// Define schema with JavaScript style comments instead of TypeScript types
 const taskSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title is too long"),
   description: z.string().max(500, "Description is too long").optional(),
 });
 
-type TaskFormValues = z.infer<typeof taskSchema>;
-
-const TaskForm: React.FC = () => {
+// Use JSDoc comments to maintain type information
+/**
+ * TaskForm component for adding new tasks
+ * @returns {React.FC} React Function Component
+ */
+const TaskForm = () => {
   const { addTask } = useTask();
 
-  const form = useForm<TaskFormValues>({
+  // Use form with JS style
+  const form = useForm({
     resolver: zodResolver(taskSchema),
     defaultValues: {
       title: "",
@@ -36,8 +41,14 @@ const TaskForm: React.FC = () => {
     },
   });
 
-  const onSubmit = (data: TaskFormValues) => {
-    // Ensure title is not undefined (it won't be due to validation, but TypeScript needs this)
+  /**
+   * Handle form submission
+   * @param {Object} data - The form data
+   * @param {string} data.title - Task title
+   * @param {string} [data.description] - Optional task description
+   */
+  const onSubmit = (data) => {
+    // Add task with the form data
     addTask({
       title: data.title,
       description: data.description,
