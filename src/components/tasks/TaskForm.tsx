@@ -37,7 +37,11 @@ const TaskForm: React.FC = () => {
   });
 
   const onSubmit = (data: TaskFormValues) => {
-    addTask(data);
+    // Ensure title is not undefined (it won't be due to validation, but TypeScript needs this)
+    addTask({
+      title: data.title,
+      description: data.description,
+    });
     form.reset();
   };
 
